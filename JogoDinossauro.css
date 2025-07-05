@@ -133,7 +133,7 @@
         right: -130px;
         width: 180px;
         height: 180px;
-        background-image: url('—Pngtree—pixel\ art\ white\ cloud\ graphic_21136654.png');
+        background-image: url(' —Pngtree—pixel\ art\ white\ cloud\ graphic_21136654.png');
         background-size: cover;
         animation: moveCloud 1.5s linear infinite;
     }
@@ -145,3 +145,64 @@
             right: 100%;
         }
     }
+    @media (max-width: 768px) {
+    #jogo {
+        width: 95%;
+        height: 300px;
+    }
+
+    #dino {
+        width: 60px;
+        height: 60px;
+        left: 30px;
+    }
+
+    #obstaculo {
+        width: 30px;
+        height: 50px;
+    }
+
+    #nuvem-img {
+        width: 100px;
+        height: 100px;
+        top: 20px;
+        right: -100px;
+    }
+
+    .play-btn {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+
+    h1 {
+        font-size: 1.2em;
+    }
+
+    #pontuacao {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1em;
+    }
+
+    #jogo {
+        height: 250px;
+    }
+
+    #dino {
+        width: 50px;
+        height: 50px;
+    }
+
+    #obstaculo {
+        width: 25px;
+        height: 45px;
+    }
+
+    #pontuacao {
+        font-size: 14px;
+    }
+}

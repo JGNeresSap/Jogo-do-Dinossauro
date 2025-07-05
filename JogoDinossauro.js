@@ -31,9 +31,17 @@ function iniciarJogo() {
     jogoAtivo = true;
 
     intervaloPontuacao = setInterval(function () {
-        pontuacao++;
-        score.innerHTML = pontuacao;
-    }, 100);
+    pontuacao++;
+    score.innerHTML = pontuacao;
+
+    if (pontuacao % 100 === 0 && jogoAtivo) {
+    let somPoint = document.getElementById("som-point");
+    if (somPoint) {
+        somPoint.currentTime = 0;
+        somPoint.play();
+    }
+}
+}, 100);
 
     testarColisao = setInterval(function () {
         var dinoBottom = parseInt(window.getComputedStyle(dino).getPropertyValue("bottom"));
@@ -41,6 +49,8 @@ function iniciarJogo() {
 
         if (obstaculoLeft < 90 && obstaculoLeft > 0 && dinoBottom < 60) {
             exibirGameOver();
+            let somGameover = document.getElementById("som-gameover");
+            somGameover.play();
         }
     }, 10);
 }
@@ -67,6 +77,11 @@ function reiniciarJogo() {
 }
 
 function pular() {
+    let somPulo = document.getElementById("som-pulo");
+    if (somPulo) {
+        somPulo.currentTime = 0;
+        somPulo.play();
+    }
     if (!jogoAtivo) return;
     if (dino.classList != "animar") {
         dino.classList.add("animar");
@@ -89,3 +104,8 @@ if (playBtn) {
 if (reiniciarBtn) {
     reiniciarBtn.addEventListener("click", reiniciarJogo);
 }
+document.getElementById("jogo").addEventListener("click", function () {
+    if (jogoAtivo) {
+        pular();
+    }
+});
