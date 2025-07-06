@@ -1,16 +1,34 @@
-let dino = document.getElementById("dino");
-let obstaculo = document.getElementById("obstaculo");
-let playBtn = document.getElementById("play-btn");
-let reiniciarBtn = document.getElementById("reiniciar-btn");
-let score = document.getElementById("score");
-let gameOver = document.getElementById("game-over");
-let gameOverPontuacao = document.getElementById("game-over-pontuacao");
-let finalScore = document.getElementById("final-score");
+const dino = document.getElementById("dino");
+const obstaculo = document.getElementById("obstaculo");
+const playBtn = document.getElementById("play-btn");
+const reiniciarBtn = document.getElementById("reiniciar-btn");
+const score = document.getElementById("score");
+const gameOver = document.getElementById("game-over");
+const gameOverPontuacao = document.getElementById("game-over-pontuacao");
+const finalScore = document.getElementById("final-score");
+const nuvem = document.getElementById("nuvem");
+const musicaFundo = document.getElementById("musica-fundo");
 
 let pontuacao = 0;
 let jogoAtivo = false;
 let intervaloPontuacao;
 let testarColisao;
+
+
+function tocarSomEfeito(src) {
+    const som = new Audio(src);
+    som.volume = 1.0;
+    som.play().catch(e => console.warn("Erro ao tocar som:", e));
+}
+
+function iniciarMusicaFundo() {
+    if (musicaFundo) {
+        musicaFundo.volume = 0.1;
+        musicaFundo.play().catch(e => {
+            console.warn("Erro ao iniciar música de fundo:", e);
+        });
+    }
+}
 
 function iniciarJogo() {
     document.getElementById("jogo").style.display = "block";
@@ -27,30 +45,26 @@ function iniciarJogo() {
 
     pontuacao = 0;
     score.innerHTML = pontuacao;
-
     jogoAtivo = true;
 
-    intervaloPontuacao = setInterval(function () {
-    pontuacao++;
-    score.innerHTML = pontuacao;
+    iniciarMusicaFundo(); 
 
-    if (pontuacao % 100 === 0 && jogoAtivo) {
-    let somPoint = document.getElementById("som-point");
-    if (somPoint) {
-        somPoint.currentTime = 0;
-        somPoint.play();
-    }
-}
-}, 100);
+    intervaloPontuacao = setInterval(() => {
+        pontuacao++;
+        score.innerHTML = pontuacao;
 
-    testarColisao = setInterval(function () {
-        var dinoBottom = parseInt(window.getComputedStyle(dino).getPropertyValue("bottom"));
-        var obstaculoLeft = parseInt(window.getComputedStyle(obstaculo).getPropertyValue("left"));
+        if (pontuacao % 100 === 0 && jogoAtivo) {
+            tocarSomEfeito("point.wav");
+        }
+    }, 100);
+
+    testarColisao = setInterval(() => {
+        const dinoBottom = parseInt(window.getComputedStyle(dino).getPropertyValue("bottom"));
+        const obstaculoLeft = parseInt(window.getComputedStyle(obstaculo).getPropertyValue("left"));
 
         if (obstaculoLeft < 90 && obstaculoLeft > 0 && dinoBottom < 60) {
+            tocarSomEfeito("die.wav");
             exibirGameOver();
-            let somGameover = document.getElementById("som-gameover");
-            somGameover.play();
         }
     }, 10);
 }
@@ -73,38 +87,31 @@ function exibirGameOver() {
 }
 
 function reiniciarJogo() {
-    iniciarJogo(); 
+    iniciarJogo();
 }
 
 function pular() {
-    let somPulo = document.getElementById("som-pulo");
-    if (somPulo) {
-        somPulo.currentTime = 0;
-        somPulo.play();
-    }
-    if (!jogoAtivo) return;
-    if (dino.classList != "animar") {
-        dino.classList.add("animar");
-        setTimeout(function () {
-            dino.classList.remove("animar");
-        }, 500);
-    }
+    if (!jogoAtivo || dino.classList.contains("animar")) return;
+
+    dino.classList.add("animar");
+    tocarSomEfeito("jump.wav");
+
+    setTimeout(() => {
+        dino.classList.remove("animar");
+    }, 500);
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-    if (playBtn) playBtn.style.display = "block";
-    if (reiniciarBtn) reiniciarBtn.style.display = "none";
-    if (gameOver) gameOver.style.display = "none";
-    if (gameOverPontuacao) gameOverPontuacao.style.display = "none";
+document.addEventListener("DOMContentLoaded", () => {
+    playBtn.style.display = "block";
+    reiniciarBtn.style.display = "none";
+    gameOver.style.display = "none";
+    gameOverPontuacao.style.display = "none";
 });
 
-if (playBtn) {
-    playBtn.addEventListener("click", iniciarJogo);
-}
-if (reiniciarBtn) {
-    reiniciarBtn.addEventListener("click", reiniciarJogo);
-}
-document.getElementById("jogo").addEventListener("click", function () {
+playBtn.addEventListener("click", iniciarJogo);
+reiniciarBtn.addEventListener("click", reiniciarJogo);
+
+document.getElementById("jogo").addEventListener("click", () => {
     if (jogoAtivo) {
         pular();
     }
